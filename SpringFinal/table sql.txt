@@ -1,0 +1,49 @@
+
+create tablespace shopspace
+datafile 'C:\oraclexe\app\oracle\oradata\XE\shopspace.dbf' size 5M;
+
+-- 유저 만들기
+create user shop
+identified by shop
+default tablespace shopspace
+quota unlimited on shopspace;
+
+-- 유저에 권한 부여하기 (grant)
+grant create table, create sequence, create session to shop;
+
+-- 유저로 접속
+conn shop/shop
+show user
+
+-- emp, dept 생성(메모장참고)
+
+-- innerjoin
+
+select *
+from dept d, emp e
+where d.deptno = e.deptno;
+
+---------------------------------------------
+
+조인?
+	1) collection 부모객체가 자식객체를 집합형으로 보유한 형태
+	2) assocation 자식객체가 
+
+파일 업로드?
+	
+create table gallery(
+ gallery_id number primary key
+ , title varchar(100)
+ , writer varchar(20)
+ , content clob
+ , regdate date default sysdate
+ , hit number default 0
+);
+
+create sequence seq_gallery
+increment by 1
+start with 1;
+
+alter table gallery
+add filename varchar(50);
+

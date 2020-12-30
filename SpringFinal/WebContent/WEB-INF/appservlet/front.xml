@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!--
+			1) SimpleUrlHandlerMapping
+			2) BeanNameUrlHandlerMapping
+			3) DefaultAnnotationHandlerMapping(상위버전으로 갈수록 이 방식이 주로 사용됨)
+			    특히, 개발자가 HandlerMapping을 지정하지 않으면, 기본이 DefaultAnnotationHandler이다.
+			    특징은 설정파일을 간소화 시키기 위해 주로 jdk5부터 가능한 @어노테이션을 이용함
+			    
+			"스프링 설정 파일의 간소화" 를 목표로 하기 떄문 -> 스프링 부트는 나중에 사용!
+	 -->
+	 <bean id="handlerMapping" 
+	 	class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>	 	
+	 
+	 <!-- 등록 -->
+	 <!-- @어노테이션이 붙은 클래스를 모두 검색해서, 스프링에서 인스턴스를 자동으로 올리자. -->
+		<!-- 	<bean id="testController" class="com.study.springfinal.test.controller.TestController"/>
+		<bean id="galleryController" class="com.study.springfinal.gallery.controller.GalleryController"/> -->
+	<context:component-scan base-package="com.study.springfinal.*">
+	</context:component-scan>
+	
+	<!-- 설정파일을 간소화시키기 위해 컴포넌트를 자동으로 생성하기 위한 scan을 시도하고 있다. 하지만, bean 태그를 작성하지 않으면 빈과 빈간의 weaving(엮는 작업)이
+		불가능해진다. 
+		해결책? 코드안의 어노테이션을 적극적으로 하면 된다. -->
+	
+	<!-- 파일업로드 처리 빈 등록 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"></bean>
+	
+	<!-- ViewResolver 등록 -->
+	<bean id="viewResolver" 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/"
+		p:suffix=".jsp"/>
+	 
+	 
+</beans>

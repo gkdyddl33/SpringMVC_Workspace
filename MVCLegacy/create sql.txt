@@ -1,0 +1,13 @@
+
+create table notice(
+ notice_id number primary key
+ , title varchar(100)
+ , writer varchar(20)
+ , content clob
+ ,regdate date default sysdate
+ , hit number default 0
+);
+
+create sequence seq_notice
+increment by 1
+start with 1;
