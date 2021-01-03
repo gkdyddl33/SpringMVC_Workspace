@@ -1,10 +1,8 @@
 package com.koreait.mylegacy.comtroller.emp;
 
-<<<<<<< HEAD
+
 import java.util.List;
 
-=======
->>>>>>> 3d5dfe31c6524cf338c2b422a5b8260b2e0d3936
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -19,12 +17,12 @@ import com.koreait.mylegacy.model.dao.JdbcDeptDAO;
 import com.koreait.mylegacy.model.dao.JdbcEmpDAO;
 import com.koreait.mylegacy.model.domain.Dept;
 import com.koreait.mylegacy.model.domain.Emp;
-<<<<<<< HEAD
+
 import com.koreait.mylegacy.model.service.JdbcEmpService;
 import com.koreait.mylegacy.model.service.MybatisEmpService;
-=======
-import com.koreait.mylegacy.model.service.EmpService;
->>>>>>> 3d5dfe31c6524cf338c2b422a5b8260b2e0d3936
+
+import com.koreait.mylegacy.model.service.JdbcEmpService.EmpService;
+
 
 // component-scan 대상이 되려면 어노테이션을 지정해야 한다.
 @Controller
@@ -32,19 +30,18 @@ public class EmpController {// DAO의 존재를 알면은 안된다.. Service가
 											 // ex. 버거킹 주방에서 남자인지 여자인지 몇살인지 사람의 존재를 알 수 없듯이..
 	private static final Logger logger = LoggerFactory.getLogger(EmpController.class);		//로고 출력 객체가 올라온다. 정보를 찍을 수 있음..
 	@Autowired
-<<<<<<< HEAD
-	private JdbcEmpService empService;
+
+	private JdbcEmpService jdbcempService;
 	@Autowired
 	private MybatisEmpService mybatisEmpService;
 	
 	// (2) 사원등록 폼 요청
 	@RequestMapping("/emp/regist_form")
-=======
 	private EmpService empService;
 	
 	// (2) 사원등록 폼 요청
 	@RequestMapping("/emp/registform")
->>>>>>> 3d5dfe31c6524cf338c2b422a5b8260b2e0d3936
+
 	public String registForm() {
 		//저장할 것이 없고, 그냥 뷰만 반환하고 싶을 때는 String 도 가능..
 		return "emp/regist_form";
@@ -72,21 +69,21 @@ public class EmpController {// DAO의 존재를 알면은 안된다.. Service가
 		// 부서등록과 사원등록이라는 두 개의 업무가 모두 성공되어야 전체를 성공으로 간주하는 트랜잭션 상황!
 		// -- 서비스에게 등록 요청(사원,부서)가 다 등록 되어야 하므로..
 		 emp.setDept(dept);	// emp와 부서를 합체!!
-<<<<<<< HEAD
+
 		 int result = mybatisEmpService.regist(emp);
 		 logger.debug("등록결과 "+result);
 		return "redirect:/emp/list";
-=======
+
 		// int result = empService.regist(emp);
 		 //logger.debug("등록결과 "+result);
 		return null;
->>>>>>> 3d5dfe31c6524cf338c2b422a5b8260b2e0d3936
+
 	}
 	
 	// (3) 사원목록
 	@RequestMapping(value="/emp/list", method=RequestMethod.GET)
 	public ModelAndView selectAll() {
-<<<<<<< HEAD
+
 		ModelAndView mav =new ModelAndView();		
 		// 일 시킨다.
 		List empList = mybatisEmpService.selectAll();
@@ -94,10 +91,8 @@ public class EmpController {// DAO의 존재를 알면은 안된다.. Service가
 		// 저장
 		mav.addObject("empList", empList);		
 		mav.setViewName("emp/list");
-=======
-		ModelAndView mav =new ModelAndView();
-		
->>>>>>> 3d5dfe31c6524cf338c2b422a5b8260b2e0d3936
+	
+
 		return mav;
 	}
 	
