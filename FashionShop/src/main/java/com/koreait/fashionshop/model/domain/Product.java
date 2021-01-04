@@ -20,6 +20,7 @@ public class Product {
 	private MultipartFile[] addImg;	// 추가이미지 - 선택사항이며, 동시에 배열..	
 	
 	// 색상값들
-	String[] colors;
-	String[] fit;
+	private Color[] color;
+	// 사이즈들
+	private Psize[] psize;
 }
