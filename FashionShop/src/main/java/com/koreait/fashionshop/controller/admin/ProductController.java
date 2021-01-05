@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +20,9 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.koreait.fashionshop.common.FileManager;
+import com.koreait.fashionshop.exception.ProductRegistException;
 import com.koreait.fashionshop.model.domain.Product;
+import com.koreait.fashionshop.model.domain.Psize;
 import com.koreait.fashionshop.model.domain.SubCategory;
 import com.koreait.fashionshop.model.product.service.ProductService;
 import com.koreait.fashionshop.model.product.service.SubCategoryService;
@@ -105,6 +108,9 @@ public String getSubList(int topcategory_id) {// 반환형을 String 으로 하�
 	@RequestMapping(value="/admin/product/list", method=RequestMethod.GET)
 	public ModelAndView getProductList() {
 		ModelAndView mav = new ModelAndView("admin/product/product_list");		
+		
+		List productList = productService.selectAll();
+		mav.addObject("productList", productList);
 		return mav;
 	}
 	
@@ -115,16 +121,18 @@ public String getSubList(int topcategory_id) {// 반환형을 String 으로 하�
 	}
 	
 	// 상품 등록
-	@RequestMapping(value="/admin/product/regist",method = RequestMethod.POST)
+	@RequestMapping(value="/admin/product/regist",method = RequestMethod.POST,produces="text/html;charset=utf8")
 	@ResponseBody
-	public String registProduct(Product product) {// 상품, 사이즈(배열), 이미지(배열), 색상(배열)
-		logger.debug("하위카테고리 "+product.getSubcategory_id());
+	public String registProduct(Product product,String[] test) {// 상품, 사이즈(배열), 이미지(배열), 색상(배열)
+		logger.debug("하위카테고리 "+product.getSubCategory().getSubcategory_id());	// 수정
 		logger.debug("상품명 "+product.getProduct_name());
 		logger.debug("가격 "+product.getPrice());
 		logger.debug("브랜드 "+product.getBrand());
 		logger.debug("상세내용 "+product.getDetail());
 		logger.debug("업로드 이미지명 "+product.getRepImg().getOriginalFilename());
-		
+		for(Psize psize : product.getPsize()) {// int i=0;i<product.getPsize().length;i++
+			logger.debug(psize.getFit());
+		}
 		/*
 		 * for(int i=0;i<product.getAddImg().length;i++) {
 		 * logger.debug(product.getAddImg()[i].getOriginalFilename()); }
@@ -133,14 +141,14 @@ public String getSubList(int topcategory_id) {// 반환형을 String 으로 하�
 		logger.debug("insert 하기 전 product_id "+product.getProduct_id());
 		productService.regist(fileManager,product);		// 상품등록 서비스에게 요청!!!
 		logger.debug("방금 insert 된 상품의 product_id "+product.getProduct_id());
-		
 	
-		/*
-		 * for(int i =0;i<product.getFit().length;i++) {// fit 확인차..여러개 선택을 하면 다 담길수 있도록
-		 * 배열로.. String fit = product.getFit()[i]; logger.debug("지원 사이즈는  "+fit); }
-		 */
-
-		return "hahahah";	// 등록 -> 목록
+		StringBuilder sb = new StringBuilder();	
+		sb.append("{");
+		sb.append("\"result\":1,");
+		sb.append("\"msg\":\"상품등록 성공\"");
+		sb.append("}");
+		
+		return sb.toString();	// 페이지 이동 x -> @ResponseBody 명시..
 	}
 
 
@@ -150,4 +158,15 @@ public String getSubList(int topcategory_id) {// 반환형을 String 으로 하�
 
 	// 상품삭제
 	
+	// 위의 메서드 중에서 하나라도 예외가 발생하면, 아래의 핸들러가 동작
+	@ExceptionHandler(ProductRegistException.class)
+	@ResponseBody
+	public String handleException(ProductRegistException e) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("\"result\":0");
+		sb.append("\"msg\":\""+e.getMessage()+"\"");
+		sb.append("}");
+		return sb.toString();
+	}
 }

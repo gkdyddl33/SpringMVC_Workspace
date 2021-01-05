@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 public class Product {
 	private int product_id;	
-	private int subcategory_id;
+	//private int subcategory_id;
+	private SubCategory subCategory;	// 참조되있는 vo를 가져와야 한다..
 	private String product_name;
 	private int price;
 	private String brand;

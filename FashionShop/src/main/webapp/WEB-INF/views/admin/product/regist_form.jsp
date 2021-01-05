@@ -61,7 +61,7 @@ input[type=button]:hover {
 </style>
 <script type="text/javascript">
 var uploadFiles=[]; //미리보기 이미지 목록 
-var psizeArray=[];	// 유저가 선택한 사이즈를 담는 배열
+var psize=[];	// 유저가 선택한 사이즈를 담는 배열
 
 $(function(){
 	CKEDITOR.replace("detail");	
@@ -122,11 +122,27 @@ $(function(){
 	});
 	
 	// 체크박스 이벤트 구현(사이즈)
-	$("input[type='checkbox']").on("click",function(e){
-		var ch = e.target;	// 이벤트를 일으킨 주체 컴포넌트 즉, 체크박스
-		alert($(ch).val());
+	$("input[type='checkbox']").on("click", function(e){
+	      var ch = e.target; //이벤트를 일으킨 주체컴포넌트 즉 체크박스
+	      
+	      //체크박스의 길이부터 구하기
+	      var ch = $("input[name='size']");
+	      var lang = $(ch).length;
+	      
+	      //모든 배열 지우기
+	     psize=[];	// 초기화작업..
+	      
+	      for(var i=0 ; i< lang; i++){
+	         //만일 체크가 되어있다면 기존 배열 모두 지우고 체크된 체크박스 값만 배열에 넣자
+	         if($($(ch)[i]).is(":checked")){
+	             psize.push($($(ch)[i]).val());
+	         }
+	         //console.log(i, "번째 체크 박스 상태는", $($(ch)[i]).is(":checked"));
+	      }
+	      console.log("서버에 전송할 사이즈 배열의 구성은 ", psize);
+	    })
 	});
-});
+
 //업로드 이미지 미리보기
 function preview(file, index){
 	//js로 이미지 미리보기를 구현하려면, 파일리더를 이용하면 된다 FileReader
@@ -189,6 +205,9 @@ function regist(){
 	});	
 	// 폼데이터에 에디터의 값 추가하기
 	formData.append("detail",CKEDITOR.instances["detail"].getData());
+	for(var i=0;i<psize.length;i++){
+		formData.append("psize["+i+"].fit",psize);		// psize는 밖에 채워져잇는 전역변수..+ product(vo) 배열변수로 선언..		
+	}
 	
 	/*비동기 업로드*/
 	$.ajax({
@@ -197,8 +216,15 @@ function regist(){
 		contentType:false, /* false일 경우 multipart/form-data*/
 		processData:false, /* false일 경우 query-string으로 전송하지 않음*/
 		type:"post",
-		success:function(result){
-			alert(result);
+		success:function(responseData){
+			//console.log(responseData);			
+			var json = JSON.parse(responseData);	// string -> json으로 파싱
+			if(json.result==1){
+				alert(json.msg);
+				location.href="/admin/product/list";
+			}else{
+				alert(json.msg);
+			}
 		}
 	});
 	
@@ -227,7 +253,7 @@ function regist(){
   		<%} %>
   	</select>
   	
-  	<select name="subcategory_id">
+  	<select name="subCategory.subcategory_id">
   		<option>하위카테고리 선택</option>
   	</select>
     <input type="text" name="product_name" placeholder="상품명">
@@ -239,12 +265,12 @@ function regist(){
 	<div id="dragArea"></div>
 	<!-- 지원 사이즈 선택  -->
 	<p>
-		XS<input type="checkbox" 	name="psize[0].fit" value="XS">
-		S<input type="checkbox" 		name="psize[1].fit" value="S">
-		M<input type="checkbox" 		name="psize[2].fit" value="M">
-		L<input type="checkbox" 		name="psize[3].fit" value="L">
-		XL<input type="checkbox" 		name="psize[4].fit" value="XL">
-		XXL<input type="checkbox" 	name="psize[5].fit" value="XXL">
+		XS<input type="checkbox" 	name="size" value="XS">
+		S<input type="checkbox" 		name="size" value="S">
+		M<input type="checkbox" 		name="size" value="M">
+		L<input type="checkbox" 		name="size" value="L">
+		XL<input type="checkbox" 		name="size" value="XL">
+		XXL<input type="checkbox" 	name="size" value="XXL">
 	</p>
 	
 	<p>

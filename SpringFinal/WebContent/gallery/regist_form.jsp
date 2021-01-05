@@ -72,7 +72,7 @@ input[type=button]:hover {
 	<input type="file" name="photo">
 	
     <input type="button" value="글등록">
-    <input type="button" value="목록보기" onclick="location.href='/board/list'">
+    <input type="button" value="목록보기" onclick="location.href='/gallery/list'">
   </form>
 </div>
 

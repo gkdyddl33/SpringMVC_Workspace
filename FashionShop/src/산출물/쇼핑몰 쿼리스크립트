@@ -102,6 +102,21 @@ insert into subcategory(subcategory_id, topcategory_id,name) values(seq_subcateg
 insert into subcategory(subcategory_id, topcategory_id,name) values(seq_subcategory.nextval,4,'슬리퍼');
 
 
+// 회원관리 - 가입
+create table member(
+ member_id number primary key
+, user_id varchar(20)
+, name  varchar(20)
+, password varchar(20)
+, email_id varchar(20)
+, email_server varchar(20)
+, zipcode	 varchar(10)
+, addr varchar(150)	
+, regdate  date default sysdate
+);
 
+create sequence seq_memberincrement by 1start with 1;
 
-
+// 비밀번호 암호화
+alter table member modify(password varchar(100));
+fevwnkbmblvgzbbg
