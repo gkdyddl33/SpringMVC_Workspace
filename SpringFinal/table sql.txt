@@ -2,20 +2,20 @@
 create tablespace shopspace
 datafile 'C:\oraclexe\app\oracle\oradata\XE\shopspace.dbf' size 5M;
 
--- À¯Àú ¸¸µé±â
+-- ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 create user shop
 identified by shop
 default tablespace shopspace
 quota unlimited on shopspace;
 
--- À¯Àú¿¡ ±ÇÇÑ ºÎ¿©ÇÏ±â (grant)
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Î¿ï¿½ï¿½Ï±ï¿½ (grant)
 grant create table, create sequence, create session to shop;
 
--- À¯Àú·Î Á¢¼Ó
+-- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 conn shop/shop
 show user
 
--- emp, dept »ý¼º(¸Þ¸ðÀåÂü°í)
+-- emp, dept ï¿½ï¿½ï¿½ï¿½(ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 
 -- innerjoin
 
@@ -25,11 +25,11 @@ where d.deptno = e.deptno;
 
 ---------------------------------------------
 
-Á¶ÀÎ?
-	1) collection ºÎ¸ð°´Ã¼°¡ ÀÚ½Ä°´Ã¼¸¦ ÁýÇÕÇüÀ¸·Î º¸À¯ÇÑ ÇüÅÂ
-	2) assocation ÀÚ½Ä°´Ã¼°¡ 
+ï¿½ï¿½ï¿½ï¿½?
+	1) collection ï¿½Î¸ï¿½Ã¼ï¿½ï¿½ ï¿½Ú½Ä°ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	2) assocation ï¿½Ú½Ä°ï¿½Ã¼ï¿½ï¿½ 
 
-ÆÄÀÏ ¾÷·Îµå?
+ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½?
 	
 create table gallery(
  gallery_id number primary key
@@ -47,3 +47,5 @@ start with 1;
 alter table gallery
 add filename varchar(50);
 
+alter table notice
+add content clob;
