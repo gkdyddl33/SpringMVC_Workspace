@@ -30,4 +30,46 @@
 		</selectKey>	
 	</insert>
 
+	<!-- 지정한 하위 카테고리에 소속된 모든 상품 가져오기 -->
+	<select id="selectBySubCategoryId" parameterType="int" resultType="Product">
+		select * from product where subcategory_id=#{subcategory_id}
+	</select>
+	
+	<!-- 상품 상세보기 -->
+	<resultMap id="joinPsizeColorScoreImage" type="Product" ><!-- Product안에 있는 컬럼.. -->
+		<id column="product_id" property="product_id"/>
+		<result column="product_name" property="product_name"/>
+		<result column="price" property="price"/>
+		<result column="brand" property="brand"/>
+		<result column="detail" property="detail"/>
+		<result column="filename" property="filename"/>
+		
+		<!-- score -->
+		<association column="product_id" 
+			property="score"
+			javaType="Score"
+			select="Score.selectByProductId"/>
+		<!-- size -->	
+		<collection column="product_id"
+			property="psizeList"
+			javaType="java.util.List"
+			ofType="Psize"
+			select="Psize.selectByProductId"/>
+		<!-- color -->	
+		<collection column="product_id"
+			property="colorList"
+			javaType="java.util.List"
+			ofType="Color"
+			select="Color.selectByProductId"/>
+		<!-- image -->	
+		<collection column="product_id"
+			property="imageList"
+			javaType="java.util.List"
+			ofType="Image"
+			select="Image.selectByProductId"/>	
+	</resultMap>
+	
+	<select id="select" resultMap="joinPsizeColorScoreImage">
+		select * from product where product_id=#{product_id}
+	</select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.koreait.fashionshop.controller.member;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,18 +16,27 @@ import com.koreait.fashionshop.exception.MailSendException;
 import com.koreait.fashionshop.exception.MemberRegistException;
 import com.koreait.fashionshop.model.domain.Member;
 import com.koreait.fashionshop.model.member.service.MemberService;
+import com.koreait.fashionshop.model.product.service.ProductService;
+import com.koreait.fashionshop.model.product.service.TopCategoryServiceImpl;
 
 @Controller
 public class MemberController {
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private TopCategoryServiceImpl topCategoryService;
+	@Autowired
+	private ProductService productService;
 	
 	// 회원가입폼 요청
 	@RequestMapping(value="/shop/member/registForm",method=RequestMethod.GET)
-	public String getRegistForm() {
-		return "shop/member/signup";	//signup
-	}
+	 public ModelAndView getRegistForm() {
+	      ModelAndView mav=new ModelAndView("shop/member/signup");
+	      List topList=topCategoryService.selectAll();
+	      mav.addObject("topList", topList);
+	      return mav;
+	   }
 	
 	// 회원가입 요청 처리(가입버튼)
 	@RequestMapping(value="/shop/member/regist", method = RequestMethod.POST,produces = "text/html;charset=utf-8")
