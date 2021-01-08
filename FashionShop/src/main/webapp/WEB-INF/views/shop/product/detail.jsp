@@ -1,44 +1,51 @@
+  
 <%@page import="com.koreait.fashionshop.model.domain.Image"%>
 <%@page import="com.koreait.fashionshop.model.domain.Psize"%>
 <%@page import="com.koreait.fashionshop.common.Formatter"%>
 <%@page import="com.koreait.fashionshop.model.domain.Product"%>
 <%@ page contentType="text/html; charset=utf-8"%>
 <%
-	Product product = (Product)request.getAttribute("product");	
+	Product product = (Product)request.getAttribute("product");
 %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="description" content="">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
-<!-- Title  -->
-<title>Karl - Fashion Ecommerce Template | Home</title>
-<%@ include file="../inc/header.jsp"%>
-<script type="text/javascript">
-function addCart() {
-	// 비동기 방식으로 장바구니에 담자!!
-	//alert();
-	var formData = $("#cart_form").serialize();	// 파라미터를 전송할 수 있는 상태의 문자열로 나열해줌..
-	$.ajax({
-		url:"/shop/cart/regist",
-		type:"post",
-		data:formData
-		success:function(responseData){
-			alert(responseData);
+    <!-- Title  -->
+    <title>Karl - Fashion Ecommerce Template | Home</title>
+	<%@ include file="../inc/header.jsp" %>
+	<script type="text/javascript">
+		//비동기 방식으로 장바구니에 담자!!
+		function addCart(){
+			var formData=$("#cart_form").serialize();//파라미터를 전송할 수 있는 상태의 문자열로 나열해줌
+			
+			$.ajax({
+				url:"/async/shop/cart/regist",
+				type:"post", 
+				data:formData,
+				success:function(responseData){
+					if(responseData.resultCode==1){
+						if(confirm(responseData.msg+"\n장바구니에 담긴 상품을 보러갈까요?"))
+							location.href=responseData.url;
+					}else{
+						alert(responseData.msg);
+					}
+				}
+			});
 		}
-	});
-}
-</script>
+	</script>
 </head>
+
 <body>
-	<%@ include file="../inc/top.jsp"%>	
-	<!-- ****** Top Discount Area End ****** -->
-	<!-- <<<<<<<<<<<<<<<<<<<< Breadcumb Area Start <<<<<<<<<<<<<<<<<<<< -->
+    	<%@include file="../inc/top.jsp" %>
+        <!-- ****** Top Discount Area End ****** -->
+		
+        <!-- <<<<<<<<<<<<<<<<<<<< Breadcumb Area Start <<<<<<<<<<<<<<<<<<<< -->
         <div class="breadcumb_area">
             <div class="container">
                 <div class="row">
@@ -64,27 +71,26 @@ function addCart() {
                     <div class="col-12 col-md-6">
                         <div class="single_product_thumb">
                             <div id="product_details_slider" class="carousel slide" data-ride="carousel">
-
-								<!-- 썸네일 -->
+									
+								<!-- 썸네일 -->	
                                 <ol class="carousel-indicators">
                                 	<%for(int i=0;i<product.getImageList().size();i++){ %>
                                 	<%Image image = product.getImageList().get(i); %>
-                                	<%if(i>=4)break; 	// 총 4개까지만 허용할 것이므로..%>
-                                    <li <%if(i==0){ %>class="active"<%} %> data-target="#product_details_slider" data-slide-to="<%=i %>" style="background-image: url(/resources/data/addon/<%=image.getImage_id()%>.<%=image.getFilename()%>);">
-                                    </li>   
-                                    <%} %>                                 
+                                	<%if(i>=4)break; //총 4개까지만 허용할 것이므로..%>
+                                    <li <%if(i==0){%>class="active"<%}%>  data-target="#product_details_slider" data-slide-to="<%=i %>" style="background-image: url(/resources/data/addon/<%=image.getImage_id()%>.<%=image.getFilename()%>);"></li>
+                                    <%} %>
                                 </ol>
 
                                 <div class="carousel-inner">
-                                	<%for(int i=0;i<product.getImageList().size();i++){ %>
-                                	<%Image image = product.getImageList().get(i); %>
-                                	<%if(i>=4)break;%>
-                                    <div class="carousel-item<%if(i==0){ %><%out.print(" active"); %><%}%>">
+									<%for(int i=0;i<product.getImageList().size();i++){ %>
+                                	<%Image image = product.getImageList().get(i); %>   
+                                	<%if(i>=4)break; //총 4개까지만 허용할 것이므로..%>
+                                    <div class="carousel-item<%if(i==0){%><%out.print(" active");%><%}%>" >
                                         <a class="gallery_img" href="/resources/data/addon/<%=image.getImage_id()%>.<%=image.getFilename()%>">
-                                        <img class="d-block w-100" src="/resources/data/addon/<%=image.getImage_id()%>.<%=image.getFilename()%>" alt="slide<%=i%>">
-                                    </a>
-                                    </div>    
-                                    <%} %>                                
+                                        	<img class="d-block w-100" src="/resources/data/addon/<%=image.getImage_id()%>.<%=image.getFilename()%>" alt="slide <%=i%>">
+                                    	</a>
+                                    </div>
+                                   <%} %>
                                 </div>
                             </div>
                         </div>
@@ -100,15 +106,15 @@ function addCart() {
                             <p class="available">Available: <span class="text-muted">In Stock</span></p>
 
                             <div class="single_product_ratings mb-15">
-                            	<!-- 1~5사이의 값에 따라 조건을 부여하고, 미달점수의 경우 -o를 붙인다. -->
-                                <i class="fa fa-star" aria-hidden="true"></i>
+                            	<!-- 1~5사이의 값에 따라 조건을 부여하고, 미달점수의 경우 -o를 붙인다 -->
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star" aria-hidden="true"></i>
                                 <i class="fa fa-star-o" aria-hidden="true"></i>
+                                <i class="fa fa-star-o" aria-hidden="true"></i>
                             </div>
 
-                             <div class="widget size mb-50">
+                            <div class="widget size mb-50">
                                 <h6 class="widget-title">Size</h6>
                                 <div class="widget-desc">
                                     <ul>
@@ -120,14 +126,15 @@ function addCart() {
                             </div>
 
                             <!-- Add to Cart Form -->
-                            <form id="cart_Form" class="cart clearfix mb-50 d-flex"><!-- quantity 수량만 존재하므로 product_id를 안보이게 심자 -->
+                            <form id="cart_form" class="cart clearfix mb-50 d-flex">
                             	<input type="hidden" name="product_id" value="<%=product.getProduct_id()%>">
+                            	
                                 <div class="quantity">
                                     <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                    <input type="number" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
+                                    <input type="number" name="quantity" class="qty-text" id="qty" step="1" min="1" max="12"  value="1">
                                     <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                 </div>
-                                <button type="button" name="addtocart" value="5" class="btn cart-submit d-block" onclick="addCart()">Add to cart</button><!-- 장바구니 -->
+                                <button type="button" name="addtocart" value="5" class="btn cart-submit d-block" onClick="addCart()">Add to cart</button>
                             </form>
 
                             <div id="accordion" role="tablist">
@@ -218,7 +225,9 @@ function addCart() {
 
                                                 <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
                                             </div>
-                                            <button type="submit" name="addtocart" value="5" class="cart-submit">Add to cart</button>
+                                            
+                                            <button type="button" name="addtocart" value="5" class="cart-submit">Add to cart</button>
+                                            
                                             <!-- Wishlist -->
                                             <div class="modal_pro_wishlist">
                                                 <a href="wishlist.html" target="_blank"><i class="ti-heart"></i></a>
@@ -354,9 +363,13 @@ function addCart() {
                     </div>
                 </div>
             </div>
-        </section>
-	<!-- /.wrapper end -->
-	<%@include file="../inc/footer.jsp"%>
+        </section>		
+		
+        <!-- ****** Footer Area Start ****** -->
+        <%@ include file="../inc/footer.jsp" %>
+        <!-- ****** Footer Area End ****** -->
+    </div>
+    <!-- /.wrapper end -->
 </body>
 
 </html>

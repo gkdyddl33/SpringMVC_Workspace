@@ -122,3 +122,22 @@ create sequence seq_memberincrement by 1start with 1;
 // 비밀번호 암호화
 alter table member modify(password varchar(100));
 fevwnkbmblvgzbbg
+
+// AOP 트랜잭션을 실습을 위한 테이블
+create table kbank(
+ kbank_id number primary key
+ , total number default 0
+);
+
+create sequence seq_kbank
+increment by 1
+start with 1;
+
+create table sbank(
+ sbank_id number primary key
+ , total number default 0
+);
+
+create sequence seq_sbank
+increment by 1
+start with 1;

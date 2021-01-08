@@ -23,7 +23,7 @@
 </head>
 
 <body>
-	<%@ include file="../inc/top.jsp"%>
+<%@ include file="../inc/top.jsp"%>
 	<div class="container">
 	<!-- ****** Top Discount Area End ****** -->
 		<div class="container">

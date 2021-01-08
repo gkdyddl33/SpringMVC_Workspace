@@ -46,4 +46,10 @@
 	 <context:component-scan base-package="com.koreait.fashionshop">
 	 	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	 </context:component-scan>
+	 
+	 <!-- DI와 같이 객체를 인터페이스로 보유하는 방식이 아니라 공통코드를 외부로 완전히 분리시킨 후 
+	 	원하는 시점에 공통코드를 동작시키는 관점지향 프로그래밍을 가리켜 AOP라 부른다. -->
+	 <!-- 공통코드:Bell(@Component로 이미 빈 등록이 되있음..) -->
+	 <!-- 어느시점에, 어떤 메서드 호출시 공통코드를 동작시킬지를 xml로 서술해보자 -->
+	 
 </beans>
